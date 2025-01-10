@@ -1,17 +1,19 @@
-interface AbstractClient {
-   Run(): void;
-}
+import { HouseBuilder } from './builder.js';
+import { GarageForeman, HouseForeman } from './foreman.js';
 
-// class Client implements AbstractClient {
-//    water: AbstractWater;
-//    bottle: AbstractBottle;
+const ConcreteBuilder1 = new HouseBuilder();
+const Director = new HouseForeman(ConcreteBuilder1);
 
-//    constructor(IFactory: AbstractFactory) {
-//       console.log('Creating a new Client Factory...');
-//       setTimeout(() => {
-//          console.log(' ');
-//       }, 2000);
-//    }
-// }
+Director.checkResult();
 
-// const CocaColaPresident = new Client(new CocaColaFactory());
+Director.startToBuild();
+
+setTimeout(() => {
+   Director.checkResult();
+}, 3000);
+
+setTimeout(() => {
+   const Director2 = new GarageForeman(ConcreteBuilder1);
+   Director2.startToBuild();
+   Director2.checkResult();
+}, 5000);
