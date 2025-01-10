@@ -1,7 +1,8 @@
 {
    "compilerOptions": {
       "target": "ES2017",
-      "outDir": "./dist"
+      "outDir": "./dist",
+      "removeComments": false
    },
-   "include": ["./src/AbstractFactory/*.ts"]
+   "include": ["./src/Builder/*.ts"]
 }
