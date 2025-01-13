@@ -1,50 +1,42 @@
-class Product {
+import { v4 as uuidv4 } from 'uuid';
+class IProto {
+    constructor() {
+        this.father = null;
+    }
+    clone() {
+        return;
+    }
 }
-class BowlingBall extends Product {
+class ProductPrototype extends IProto {
     constructor() {
         super();
-        this.name = 'bowling ball';
-        this.shape = 'round-shape';
+        this.father = null;
+        this.id = !this.id ? this.generateId() : null;
+        this.name = 'customPrototype';
+        this.clone = this.clone;
+        this.generateId = this.generateId;
     }
-}
-class RagbyBall extends Product {
-    constructor() {
-        super();
-        this.name = 'ragby ball';
-        this.shape = 'triangle-shape';
-    }
-}
-var SportGoods;
-(function (SportGoods) {
-    SportGoods["ragby_ball"] = "ragby_ball";
-    SportGoods["bowling_ball"] = "bowling_ball";
-    SportGoods["socker_ball"] = "socker_ball";
-    SportGoods["golf_ball"] = "golf_ball";
-})(SportGoods || (SportGoods = {}));
-class AbstractSportFactory {
-    createProduct(type) {
-        return null;
-    }
-}
-class SportItemsFactory extends AbstractSportFactory {
-    constructor() {
-        super();
-        this.fabricName = 'new fabric 1';
-    }
-    createProduct(type) {
-        switch (type) {
-            case SportGoods.bowling_ball:
-                return new BowlingBall();
-            case SportGoods.ragby_ball:
-                return new RagbyBall();
-            default:
-                return null;
+    clone() {
+        const newId = this.generateId();
+        if (!newId) {
+            return null;
         }
+        const thisObject = this;
+        return { ...this, id: newId, father: thisObject };
+    }
+    generateId() {
+        return uuidv4();
     }
 }
-const mySportFabric = new SportItemsFactory();
-console.log('fabricName : ' + mySportFabric.fabricName);
-const golfBall = mySportFabric.createProduct(SportGoods.golf_ball);
-const ragbyBall = mySportFabric.createProduct(SportGoods.ragby_ball);
-console.log('golfBall: ' + golfBall?.name + ' ' + golfBall?.shape);
-console.log('ragbyBall: ' + ragbyBall?.name + ' ' + ragbyBall?.shape);
+const product = new ProductPrototype();
+const clone1 = product.clone();
+const clone2 = product.clone();
+console.log('product: ', product?.father?.id);
+console.log('clone1: ', clone1?.father?.id);
+console.log('clone2: ', clone2?.father?.id);
+const clone3 = clone2.clone();
+const clone4 = clone2.clone();
+const clone5 = clone2.clone();
+console.log('clone3: ', clone3?.father?.id);
+console.log('clone4: ', clone4?.father?.id);
+console.log('clone5: ', clone5?.father?.id);

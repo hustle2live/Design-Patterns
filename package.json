@@ -12,6 +12,7 @@
         "serve": "npm run clean && tsc && node ./dist/index.js"
     },
     "dependencies": {
-        "rimraf": "^6.0.1"
+        "rimraf": "^6.0.1",
+        "uuid": "^11.0.5"
     }
 }

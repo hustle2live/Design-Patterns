@@ -6,7 +6,8 @@
       "outDir": "./dist",
       "downlevelIteration": false,
       "esModuleInterop": true,
-      "removeComments": false
+      "removeComments": false,
+      "moduleResolution": "node"
    },
-   "include": ["./src/FactoryMethod/*.ts"]
+   "include": ["./src/Prototype/*.ts"]
 }
