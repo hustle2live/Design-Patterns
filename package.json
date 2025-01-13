@@ -6,9 +6,12 @@
     "main": "pathToMain",
     "type": "module",
     "scripts": {
-        "build": "tsc",
+        "clean": "rimraf ./dist",
+        "build": "npm run clean && tsc",
         "start": "node ./dist/index.js",
-        "serve": "tsc && node ./dist/index.js"
+        "serve": "npm run clean && tsc && node ./dist/index.js"
     },
-    "dependencies": {}
+    "dependencies": {
+        "rimraf": "^6.0.1"
+    }
 }

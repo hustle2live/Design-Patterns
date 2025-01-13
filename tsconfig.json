@@ -1,8 +1,12 @@
 {
    "compilerOptions": {
-      "target": "ES2017",
+      "target": "ES2020",
+      "module": "ES2020",
+      "lib": ["ES2020", "DOM"],
       "outDir": "./dist",
+      "downlevelIteration": false,
+      "esModuleInterop": true,
       "removeComments": false
    },
-   "include": ["./src/Builder/*.ts"]
+   "include": ["./src/FactoryMethod/*.ts"]
 }
