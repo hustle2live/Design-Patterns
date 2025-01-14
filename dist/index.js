@@ -1,33 +1,58 @@
-import { v4 as uuidv4 } from 'uuid';
-class IProto {
+// implements ISingleton
+class Singleton {
     constructor() {
-        this.id = '7f9273a8-b22d-4ea8-93ba-9772bd530001';
-        this.name = 'IProto_object-instance';
+        console.log('creation successfull...');
+    }
+    static init() {
+        if (Singleton.instanceCount >= Singleton.instanceLimit) {
+            console.log('creation denied...');
+            return Singleton.rootInstance;
+        }
+        const newInstance = new Singleton();
+        const counter = Singleton.instanceCount + 1;
+        Singleton.setCount(counter);
+        Singleton.notify(counter);
+        newInstance.name = 'instance № ' + counter;
+        if (!Singleton.rootInstance) {
+            newInstance.name = 'Root ' + newInstance.name;
+            Singleton.rootInstance = newInstance;
+        }
+        return newInstance;
+    }
+    static setCount(num) {
+        Singleton.instanceCount = num;
+    }
+    static setLimit(num) {
+        console.log(' ');
+        Singleton.instanceLimit = num;
+        console.log('limit changed to - ' + Singleton.instanceLimit);
+        console.log(' ');
+    }
+    static notify(counter) {
+        console.log(Singleton.instanceCount < Singleton.instanceLimit);
+        console.log('Singleton instance created');
+        console.log('instances created: ' + Singleton.instanceCount);
+        console.log('counter - ' + counter);
+        console.log('limit - ' + Singleton.instanceLimit);
+        console.log('limit is riched - ', Singleton.instanceCount >= Singleton.instanceLimit);
+        console.log(' ');
+        console.log(' ');
     }
 }
-class ProductPrototype extends IProto {
-    constructor(name = 'ClonePrototype') {
-        super();
-        this.name = name;
-    }
-    clone() {
-        const clone = new ProductPrototype(); // and also good Object.create(Object.getPrototypeOf(this));
-        Object.assign(clone, this);
-        clone.id = this.generateId();
-        clone.father = this;
-        return clone;
-    }
-    generateId() {
-        return uuidv4();
-    }
-}
-const product = new ProductPrototype();
-const clone1 = product.clone();
-const clone2 = product.clone();
-const clone3 = clone2.clone();
-const clone4 = clone2.clone();
-console.log('product (new product) : ', product);
-console.log('obj 1 (product.clone) : ', clone1);
-console.log('obj 2 (product.clone) : ', clone2);
-console.log('obj 3 (clone2.clone) : ', clone3);
-console.log('obj 4 (clone2.clone) : ', clone4);
+Singleton.rootInstance = null;
+Singleton.instanceCount = 0;
+Singleton.instanceLimit = 1;
+const itemFirst = Singleton.init();
+const itemSecond = Singleton.init();
+Singleton.setLimit(3);
+const itemThird = Singleton.init();
+const itemFourth = Singleton.init();
+const itemFifth = Singleton.init();
+const itemSixth = Singleton.init();
+console.log(itemFirst);
+console.log(itemSecond);
+console.log(itemThird);
+console.log(itemFourth);
+console.log(itemFifth);
+console.log(itemSixth);
+export {};
