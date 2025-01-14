@@ -58,7 +58,7 @@ class Singleton implements ISingleton {
 }
 
 const itemFirst = Singleton.init();
-const itemSecond = Singleton.init();
+const itemSecond = Singleton.init(); // буде відмовлено
 Singleton.setLimit(3);
 const itemThird = Singleton.init();
 const itemFourth = Singleton.init();
