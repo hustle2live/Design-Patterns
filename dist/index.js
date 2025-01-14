@@ -68,7 +68,13 @@ class ProductSingleton {
         return ProductSingleton.instance;
     }
     someMethod() {
-        console.log("Singleton instance method called");
+        console.log('Singleton instance method called');
     }
 }
 ProductSingleton.instance = null;
+// Правильний спосіб отримати екземпляр:
+const instance1 = ProductSingleton.getInstance();
+const instance2 = ProductSingleton.getInstance();
+instance1.someMethod();
+// Перевірка: обидві змінні посилаються на один і той же екземпляр
+console.log(instance1 === instance2); // true

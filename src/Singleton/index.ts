@@ -73,24 +73,31 @@ console.log(itemFourth);
 console.log(itemFifth);
 console.log(itemSixth);
 
-
-
 // спрощений приклад того, як можна реалізувати класичний Singleton:
 
 class ProductSingleton {
-  private static instance: ProductSingleton | null = null;
-  private constructor() {
-    // Приватний конструктор запобігає створенню нових екземплярів
-  }
+   private static instance: ProductSingleton | null = null;
+   private constructor() {
+      // Приватний конструктор запобігає створенню нових екземплярів
+   }
 
-  public static getInstance(): ProductSingleton {
-    if (!ProductSingleton.instance) {
-      ProductSingleton.instance = new ProductSingleton();
-    }
-    return ProductSingleton.instance;
-  }
+   public static getInstance(): ProductSingleton {
+      if (!ProductSingleton.instance) {
+         ProductSingleton.instance = new ProductSingleton();
+      }
+      return ProductSingleton.instance;
+   }
 
-  public someMethod(): void {
-    console.log("Singleton instance method called");
-  }
+   public someMethod(): void {
+      console.log('Singleton instance method called');
+   }
 }
+
+// Правильний спосіб отримати екземпляр:
+const instance1 = ProductSingleton.getInstance();
+const instance2 = ProductSingleton.getInstance();
+
+instance1.someMethod();
+
+// Перевірка: обидві змінні посилаються на один і той же екземпляр
+console.log(instance1 === instance2); // true
