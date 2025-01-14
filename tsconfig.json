@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["./src/Singletone/*.ts"]
+   "include": ["src/Singleton/*.ts"]
 }

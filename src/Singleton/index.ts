@@ -20,6 +20,7 @@ class Singleton implements ISingleton {
          console.log('creation denied...');
          return Singleton.rootInstance;
       }
+
       const newInstance = new Singleton();
       const counter = Singleton.instanceCount + 1;
       Singleton.setCount(counter);
@@ -39,8 +40,8 @@ class Singleton implements ISingleton {
    }
 
    public static setLimit(num: number): void {
-      console.log(' ');
       Singleton.instanceLimit = num;
+      console.log(' ');
       console.log('limit changed to - ' + Singleton.instanceLimit);
       console.log(' ');
    }

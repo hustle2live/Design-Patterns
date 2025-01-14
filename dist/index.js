@@ -1,4 +1,5 @@
-// implements ISingleton
+// ................................................................... //
+// метод Singleton з можливістю зміни кількості екземплярів класу
 class Singleton {
     constructor() {
         console.log('creation successfull...');
@@ -23,8 +24,8 @@ class Singleton {
         Singleton.instanceCount = num;
     }
     static setLimit(num) {
-        console.log(' ');
         Singleton.instanceLimit = num;
+        console.log(' ');
         console.log('limit changed to - ' + Singleton.instanceLimit);
         console.log(' ');
     }
@@ -43,7 +44,7 @@ Singleton.rootInstance = null;
 Singleton.instanceCount = 0;
 Singleton.instanceLimit = 1;
 const itemFirst = Singleton.init();
-const itemSecond = Singleton.init();
+const itemSecond = Singleton.init(); // буде відмовлено
 Singleton.setLimit(3);
 const itemThird = Singleton.init();
 const itemFourth = Singleton.init();
@@ -55,4 +56,3 @@ console.log(itemThird);
 console.log(itemFourth);
 console.log(itemFifth);
 console.log(itemSixth);
-export {};
