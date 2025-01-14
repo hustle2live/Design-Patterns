@@ -3,42 +3,36 @@ import { v4 as uuidv4 } from 'uuid';
 interface IPrototype {
    clone: () => IPrototype;
    name: string;
+   father?: IPrototype;
+   id: string;
+}
+
+abstract class IProto implements IPrototype {
+   id: string = '7f9273a8-b22d-4ea8-93ba-9772bd530001';
+   name: string = 'IProto_object-instance';
+   father?: IPrototype;
+   abstract clone(): IPrototype;
+}
+
+class ProductPrototype extends IProto {
+   id: string;
+   name: string;
    father: IPrototype;
-   id: string;
-}
 
-abstract class IProto {
-   id: string;
-   name: string;
-   father: IPrototype = null;
-   clone(): IPrototype {
-      return;
-   }
-}
-
-class ProductPrototype extends IProto implements IPrototype {
-   id: string;
-   name: string;
-   father: IPrototype = null;
-
-   constructor() {
+   constructor(name: string = 'ClonePrototype') {
       super();
-      this.id = !this.id ? this.generateId() : null;
-      this.name = 'customPrototype';
-      this.clone = this.clone;
-      this.generateId = this.generateId;
+      this.name = name;
    }
 
-   public override clone(): IProto {
-      const newId = this.generateId();
-      if (!newId) {
-         return null;
-      }
-      const thisObject = this;
-      return { ...this, id: newId, father: thisObject };
+   public override clone(): IPrototype {
+      const clone = new ProductPrototype(); // neccessary to copy methods. // And also good version: const clone = Object.create(Object.getPrototypeOf(this));
+      Object.assign(clone, this);
+      clone.id = this.generateId();
+      clone.father = this;
+      return clone;
    }
 
-   public generateId(): string {
+   private generateId(): string {
       return uuidv4();
    }
 }
@@ -46,15 +40,11 @@ class ProductPrototype extends IProto implements IPrototype {
 const product = new ProductPrototype();
 const clone1 = product.clone();
 const clone2 = product.clone();
-
-console.log('product: ', product?.father?.id);
-console.log('clone1: ', clone1?.father?.id);
-console.log('clone2: ', clone2?.father?.id);
-
 const clone3 = clone2.clone();
 const clone4 = clone2.clone();
-const clone5 = clone2.clone();
 
-console.log('clone3: ', clone3?.father?.id);
-console.log('clone4: ', clone4?.father?.id);
-console.log('clone5: ', clone5?.father?.id);
+console.log('product (new product) : ', product);
+console.log('obj 1 (product.clone) : ', clone1);
+console.log('obj 2 (product.clone) : ', clone2);
+console.log('obj 3 (clone2.clone) : ', clone3);
+console.log('obj 4 (clone2.clone) : ', clone4);
