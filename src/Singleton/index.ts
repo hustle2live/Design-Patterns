@@ -72,3 +72,25 @@ console.log(itemThird);
 console.log(itemFourth);
 console.log(itemFifth);
 console.log(itemSixth);
+
+
+
+// спрощений приклад того, як можна реалізувати класичний Singleton:
+
+class ProductSingleton {
+  private static instance: ProductSingleton | null = null;
+  private constructor() {
+    // Приватний конструктор запобігає створенню нових екземплярів
+  }
+
+  public static getInstance(): ProductSingleton {
+    if (!ProductSingleton.instance) {
+      ProductSingleton.instance = new ProductSingleton();
+    }
+    return ProductSingleton.instance;
+  }
+
+  public someMethod(): void {
+    console.log("Singleton instance method called");
+  }
+}
