@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Structural/Adapter/*.ts"]
+   "include": ["src/Structural/Composite/*.ts"]
 }
