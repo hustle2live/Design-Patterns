@@ -1,73 +1,45 @@
-class Component {
-    setParent(component) {
-        this.parent = component;
-    }
-    getParent() {
-        return this.parent;
-    }
-    add(component) { }
-    remove(component) { }
-    isComposite() {
-        return false;
+class Implementor {
+    operationImpl() {
+        return 'Pencil';
     }
 }
-class Leaf extends Component {
-    constructor() {
-        super(...arguments);
-        this.name = 'Leaf';
+class ConcreteImplementorA extends Implementor {
+    operationImpl() {
+        return 'ext Marker';
+    }
+}
+class ConcreteImplementorB extends Implementor {
+    operationImpl() {
+        return 'ext Gradient';
+    }
+}
+class Abstraction {
+    constructor(imp) {
+        this.implementor = imp;
+    }
+    draw() {
+        return '';
     }
     operation() {
-        return 'Simple Leaf';
+        const res = this.implementor.operationImpl();
+        return `baseOperation with ${res}`;
     }
 }
-class Composite extends Component {
-    constructor() {
-        super(...arguments);
-        this.children = [];
-        this.name = 'Composite';
-    }
-    add(component) {
-        this.children.push(component);
-    }
-    remove(component) {
-        const itemIdx = this.children.indexOf(component);
-        this.children.splice(itemIdx, 1);
-        component.setParent(null);
-    }
-    isComposite() {
-        return true;
-    }
+class RefinedAbstraction extends Abstraction {
     operation() {
-        const results = [];
-        for (const child of this.children) {
-            results.push(child.name);
-        }
-        return `Branch ${results.join(' + ')}`;
+        const res = this.implementor.operationImpl();
+        return `Refined implementation with ${res}`;
     }
 }
-const clientCode1 = (component) => {
-    console.log(`Result: ${component.operation()}`);
-    console.log('');
+const client = (abstraction) => {
+    console.log(abstraction.operation());
 };
-const simple = new Leaf();
-clientCode1(simple);
-const tree = new Composite();
-const branch1 = new Composite();
-branch1.add(new Leaf());
-branch1.add(new Leaf());
-const branch2 = new Composite();
-branch2.add(new Leaf());
-tree.add(branch1);
-tree.add(branch2);
-clientCode1(branch1);
-console.log("Client: Now I've got a composite tree:");
-clientCode1(tree);
-function clientCode2(component1, component2) {
-    if (component1.isComposite()) {
-        component1.add(component2);
-    }
-    console.log(`RESULT: ${component1.operation()}`);
-    console.log('');
-}
-console.log("Client: I don't need to check the components classes even when managing the tree:");
-clientCode2(tree, simple);
+const implementation = new Implementor();
+const abstraction = new Abstraction(implementation);
+client(abstraction);
+const markerImplementor = new ConcreteImplementorA();
+const gradientImplementor = new ConcreteImplementorB();
+const abstractionSecond = new RefinedAbstraction(markerImplementor);
+const abstractionThird = new RefinedAbstraction(gradientImplementor);
+client(abstractionSecond);
+client(abstractionThird);
