@@ -46,7 +46,7 @@ class FlyweightFactory {
       } else {
          console.log(`Re-using existing program - ${name}`);
       }
-      return FlyweightFactory.flyweights.get(name);
+      return FlyweightFactory.flyweights.get(name) as Program;
    }
 }
 
