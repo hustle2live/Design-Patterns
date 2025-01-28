@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Structural/Bridge/*.ts"]
+   "include": ["src/Structural/Proxy/*.ts"]
 }

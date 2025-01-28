@@ -1,45 +1,25 @@
-class Implementor {
-    operationImpl() {
-        return 'Pencil';
-    }
-}
-class ConcreteImplementorA extends Implementor {
-    operationImpl() {
-        return 'ext Marker';
-    }
-}
-class ConcreteImplementorB extends Implementor {
-    operationImpl() {
-        return 'ext Gradient';
-    }
-}
-class Abstraction {
-    constructor(imp) {
-        this.implementor = imp;
-    }
-    draw() {
-        return '';
+class Machine {
+    constructor(_name) {
+        this.instanceName = _name;
     }
     operation() {
-        const res = this.implementor.operationImpl();
-        return `baseOperation with ${res}`;
+        console.log('base instance ' + this.instanceName);
     }
 }
-class RefinedAbstraction extends Abstraction {
+class ProxyMachine {
+    constructor(_name) {
+        this.ogInstance = null;
+        this.name = _name;
+    }
     operation() {
-        const res = this.implementor.operationImpl();
-        return `Refined implementation with ${res}`;
+        if (this.ogInstance === null) {
+            this.ogInstance = new Machine('instance');
+        }
+        console.log(this.name + ' :: ');
+        this.ogInstance.operation();
     }
 }
-const client = (abstraction) => {
-    console.log(abstraction.operation());
-};
-const implementation = new Implementor();
-const abstraction = new Abstraction(implementation);
-client(abstraction);
-const markerImplementor = new ConcreteImplementorA();
-const gradientImplementor = new ConcreteImplementorB();
-const abstractionSecond = new RefinedAbstraction(markerImplementor);
-const abstractionThird = new RefinedAbstraction(gradientImplementor);
-client(abstractionSecond);
-client(abstractionThird);
+const machine = new Machine('Baltimor equipment machine');
+const proxy = new ProxyMachine('proxy ins');
+machine.operation();
+proxy.operation();
