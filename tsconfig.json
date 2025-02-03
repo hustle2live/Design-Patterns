@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Behavioral/ChainOfResponsibility/*.ts"]
+   "include": ["src/Behavioral/Command/*.ts"]
 }
