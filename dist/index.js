@@ -3,7 +3,7 @@ class Receiver {
         this.payload = a;
     }
     action(payload) {
-        console.log('Received to confirm :: ' + payload);
+        console.log('Passed to receiver :: ' + payload);
     }
 }
 class Command {
@@ -40,33 +40,28 @@ class Invoker {
         this.finish = command;
     }
     doSomething(payload) {
-        if (!this.start || !this.finish) {
-            return console.log('Set function start and finish at first');
-        }
         console.log('launch (~)');
-        if (!this.isStarted) {
-            this.taskName = payload;
-            console.log(this.taskName);
+        this.taskName = payload;
+        console.log(this.taskName);
+        if (this.start) {
             this.isStarted = true;
             this.start.exec();
-            this.finish.exec();
-            this.stopDo();
-            return console.log('');
         }
-        console.log(`machine is working already on ${this.taskName}`);
+        if (this.finish) {
+            this.finish.exec();
+        }
+        this.stopDo();
     }
     stopDo() {
-        console.log('turn off (|)');
         this.isStarted = false;
+        console.log('turn off (|)');
+        console.log('');
     }
 }
 const invoker = new Invoker();
-invoker.setStart(new SimpleCommand(':: Simple Command!..'));
-invoker.setFinish(new SimpleCommand(':: Finish!..'));
-invoker.doSomething('Task1 - ');
-invoker.doSomething('Task2 - ');
+const simpleCommand = new SimpleCommand(':: printing ..');
 const baseReceiver = new Receiver('receive action');
-const complexCommand = new ComplexCommand(baseReceiver, '__Complexxxed Command!...__');
-invoker.setStart(complexCommand);
+const complexCommand = new ComplexCommand(baseReceiver, 'Fetching data...');
+invoker.setStart(simpleCommand);
 invoker.setFinish(complexCommand);
-invoker.doSomething('Task3 - ');
+invoker.doSomething('Task1 - ');

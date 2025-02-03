@@ -9,7 +9,7 @@ class Receiver implements IReceiver {
    }
 
    action(payload: any): void {
-      console.log('Received to confirm :: ' + payload);
+      console.log('Passed to receiver :: ' + payload);
    }
 }
 
@@ -66,42 +66,68 @@ class Invoker {
    }
 
    doSomething(payload: string): void {
-      if (!this.start || !this.finish) {
-         return console.log('Set function start and finish at first');
-      }
-
       console.log('launch (~)');
+      this.taskName = payload;
+      console.log(this.taskName);
 
-      if (!this.isStarted) {
-         this.taskName = payload;
-         console.log(this.taskName);
+      if (this.start) {
          this.isStarted = true;
          this.start.exec();
-
-         this.finish.exec();
-         this.stopDo();
-         return console.log('');
       }
 
-      console.log(`machine is working already on ${this.taskName}`);
+      if (this.finish) {
+         this.finish.exec();
+      }
+
+      this.stopDo();
    }
 
    private stopDo() {
-      console.log('turn off (|)');
       this.isStarted = false;
+      console.log('turn off (|)');
+      console.log('');
    }
 }
 
 const invoker = new Invoker();
-invoker.setStart(new SimpleCommand(':: Simple Command!..'));
-invoker.setFinish(new SimpleCommand(':: Finish!..'));
+const simpleCommand = new SimpleCommand(':: printing ..');
+const baseReceiver = new Receiver('receive action');
+const complexCommand = new ComplexCommand(baseReceiver, 'Fetching data...');
+
+invoker.setStart(simpleCommand);
+invoker.setFinish(complexCommand);
 
 invoker.doSomething('Task1 - ');
-invoker.doSomething('Task2 - ');
 
-const baseReceiver = new Receiver('receive action');
-const complexCommand = new ComplexCommand(baseReceiver, '__Complexxxed Command!...__');
+// ------------------------ ------------------------------ ------------------------
+// -------------------- unDo/reDo Implementation with Command Pattern -------------
 
-invoker.setStart(complexCommand);
-invoker.setFinish(complexCommand);
-invoker.doSomething('Task3 - ');
+interface ICommand {
+   execute(): void;
+   undo(): void; // Додаємо метод для відміни дії
+}
+
+class InvokerAdvanced {
+   private undoStack: ICommand[] = [];
+   private redoStack: ICommand[] = [];
+
+   executeCommand(command: ICommand) {
+      command.execute();
+      this.undoStack.push(command);
+      this.redoStack = []; // Очищаємо стек повторення при виконанні нової команди
+   }
+
+   undo() {
+      if (this.undoStack.length === 0) return;
+      const command = this.undoStack.pop();
+      command.undo();
+      this.redoStack.push(command);
+   }
+
+   redo() {
+      if (this.redoStack.length === 0) return;
+      const command = this.redoStack.pop();
+      command.execute();
+      this.undoStack.push(command);
+   }
+}
