@@ -1,25 +1,31 @@
-class Machine {
-    constructor(_name) {
-        this.instanceName = _name;
+class Translator {
+    constructor(language, nextTranslator) {
+        this.nativeLanguage = language;
+        this.nextTranslator = nextTranslator || null;
     }
-    operation() {
-        console.log('base instance ' + this.instanceName);
+    makeTranslate(str) {
+        console.log(`✔️ Translated by myself to ${this.nativeLanguage}`);
+        console.log('');
+        return `[${this.nativeLanguage}] : ${text}`;
     }
-}
-class ProxyMachine {
-    constructor(_name) {
-        this.ogInstance = null;
-        this.name = _name;
-    }
-    operation() {
-        if (this.ogInstance === null) {
-            this.ogInstance = new Machine('instance');
+    translate(letter, lang) {
+        console.log(`try translate ${lang} letter...`);
+        if (this.nativeLanguage === lang) {
+            return this.makeTranslate(text);
         }
-        console.log(this.name + ' :: ');
-        this.ogInstance.operation();
+        if (this.nextTranslator) {
+            console.log('🔀 Passing to next translator...');
+            return this.nextTranslator.translate(letter, lang);
+        }
+        console.log(`❌ No translator available for "${lang}"`);
+        return null;
     }
 }
-const machine = new Machine('Baltimor equipment machine');
-const proxy = new ProxyMachine('proxy ins');
-machine.operation();
-proxy.operation();
+const chiTranslator = new Translator('CHI');
+const ukrTranslator = new Translator('UKR', chiTranslator);
+const engTranslator = new Translator('ENG', ukrTranslator);
+const text = 'lorem ipsum dolor...';
+engTranslator.translate(text, 'UKR');
+engTranslator.translate(text, 'ENG');
+engTranslator.translate(text, 'CHI');
+engTranslator.translate(text, 'GER');

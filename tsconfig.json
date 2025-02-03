@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Structural/Proxy/*.ts"]
+   "include": ["src/Behavioral/ChainOfResponsibility/*.ts"]
 }
