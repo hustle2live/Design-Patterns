@@ -106,7 +106,7 @@ class Mediator implements IMediator {
    public getSalary(): void {
       const income = this.income.reduce((summ, item, idx) => (summ += item), 0);
       console.log(``);
-      console.log(`[me:] My income ${income}`);
+      console.log(`[me:] My income is: $${income} 💰`);
       console.log(``);
    }
 }

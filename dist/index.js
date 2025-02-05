@@ -88,7 +88,7 @@ class Mediator {
     getSalary() {
         const income = this.income.reduce((summ, item, idx) => (summ += item), 0);
         console.log(``);
-        console.log(`[me:] My income ${income}`);
+        console.log(`[me:] My income is: $${income} 💰`);
         console.log(``);
     }
 }
