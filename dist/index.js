@@ -1,67 +1,57 @@
-class Receiver {
-    constructor(a) {
-        this.payload = a;
-    }
-    action(payload) {
-        console.log('Passed to receiver :: ' + payload);
-    }
-}
-class Command {
-    constructor(payload, receiver) {
-        this.payload = payload;
-        this.receiver = receiver || null;
-    }
-}
-class SimpleCommand extends Command {
-    exec() {
-        console.log(`I can do this simple ${this.payload}`);
-    }
-}
-class ComplexCommand {
-    constructor(receiver, payload) {
-        this.receiver = receiver;
-        this.payload = payload;
-    }
-    exec() {
-        this.receiver.action(this.payload);
-    }
-}
-class Invoker {
+// Патерн Ітератор: Простий спосіб перебирати елементи колекції
+class Collection {
     constructor() {
-        this.taskName = null;
-        this.isStarted = false;
-        this.start = null;
-        this.finish = null;
+        this.list = [];
     }
-    setStart(command) {
-        this.start = command;
+    count() {
+        return this.list.length;
     }
-    setFinish(command) {
-        this.finish = command;
+    get(idx) {
+        return this.list[idx] ?? null;
     }
-    doSomething(payload) {
-        console.log('launch (~)');
-        this.taskName = payload;
-        console.log(this.taskName);
-        if (this.start) {
-            this.isStarted = true;
-            this.start.exec();
+    add(item, idx) {
+        if (!idx || this.list[idx]) {
+            const freeIndex = this.count();
+            this.list[freeIndex] = item;
+            return freeIndex;
         }
-        if (this.finish) {
-            this.finish.exec();
-        }
-        this.stopDo();
-    }
-    stopDo() {
-        this.isStarted = false;
-        console.log('turn off (|)');
-        console.log('');
+        this.list[idx] = item;
+        return idx;
     }
 }
-const invoker = new Invoker();
-const simpleCommand = new SimpleCommand(':: printing ..');
-const baseReceiver = new Receiver('receive action');
-const complexCommand = new ComplexCommand(baseReceiver, 'Fetching data...');
-invoker.setStart(simpleCommand);
-invoker.setFinish(complexCommand);
-invoker.doSomething('Task1 - ');
+class IteratorWorker {
+    constructor(collection) {
+        this.current = -1;
+        this.bank = collection;
+    }
+    isNext() {
+        if (this.current < this.bank.count() - 1) {
+            this.current++;
+            return true;
+        }
+        return false;
+    }
+    show() {
+        return this.bank.get(this.current);
+    }
+    reset() {
+        this.current = -1;
+    }
+}
+const bank = new Collection();
+bank.add('100$');
+bank.add('200$');
+bank.add('50$');
+bank.add('400$');
+const worker = new IteratorWorker(bank);
+const logger = (a) => console.log(a);
+logger(worker.isNext());
+logger(worker.show());
+logger(worker.isNext());
+logger(worker.show());
+logger(worker.isNext());
+logger(worker.show());
+logger(worker.isNext());
+logger(worker.show());
+logger(worker.isNext());
+logger(worker.show());

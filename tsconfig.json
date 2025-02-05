@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Behavioral/Command/*.ts"]
+   "include": ["src/Behavioral/Iterator/*.ts"]
 }
