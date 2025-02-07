@@ -1,55 +1,45 @@
-class Professor {
-    constructor(state) {
-        this.state = state;
+class Observer {
+    constructor() {
+        this.subscribers = [];
     }
-    createMemento() {
-        return new Memento(this.state);
+    subscribe(client) {
+        this.subscribers.push(client);
     }
-    restore(memo) {
-        this.state = memo.getState();
-    }
-    getState() {
-        console.log(this.state);
-        return this.state;
-    }
-}
-class Memento {
-    constructor(state) {
-        this.state = null;
-        this.state = state;
-    }
-    getState() {
-        return this.state;
-    }
-}
-class CareHandler {
-    constructor(instance) {
-        this.mementos = [];
-        this.professor = instance;
-    }
-    backup() {
-        this.mementos.push(this.professor.createMemento());
-    }
-    undo() {
-        if (this.mementos.length === 0) {
-            return;
+    unSubscribe(client) {
+        const idx = this.subscribers.indexOf(client);
+        if (idx !== -1) {
+            const exClient = this.subscribers.splice(idx, 1)[0];
+            this.sendTo(exClient, 'unsubscribed ✔️');
+            return exClient;
         }
-        const memo = this.mementos.pop();
-        this.professor.restore(memo);
     }
-    watch() {
-        console.log('');
-        console.log(this.mementos);
+    notify(data) {
+        for (const client of this.subscribers) {
+            client.send(data);
+        }
+    }
+    sendTo(client, data) {
+        client.send(data);
     }
 }
-const professor = new Professor('Init Professor');
-const handler = new CareHandler(professor);
-handler.backup();
-professor.getState();
-professor.state = 'Home clothes';
-handler.backup();
-professor.getState();
-professor.state = 'Work clothes';
-// handler.backup();
-professor.getState();
-handler.watch();
+class Client {
+    constructor(name) {
+        this.name = name;
+    }
+    send(message) {
+        console.log(`[Inbox ${this.name}:] ${message}`);
+    }
+}
+const John = new Client('John');
+const Greg = new Client('Greg');
+const Jeffry = new Client('Jeffry');
+const observer = new Observer();
+observer.subscribe(John);
+observer.subscribe(Greg);
+observer.subscribe(Jeffry);
+observer.notify('Hello subscribers👋');
+console.log('');
+observer.unSubscribe(Greg);
+observer.sendTo(Greg, 123214);
+console.log('');
+observer.notify('🫡, Hey still subscribers ...');

@@ -9,5 +9,5 @@
       "removeComments": false,
       "moduleResolution": "node"
    },
-   "include": ["src/Behavioral/Memento/*.ts"]
+   "include": ["src/Behavioral/Template/*.ts"]
 }
