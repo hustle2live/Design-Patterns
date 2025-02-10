@@ -1,124 +1,48 @@
-class State {
-    constructor(smartphone) {
-        this.device = smartphone;
+class Strategy {
+}
+class Context {
+    constructor(strategy) {
+        this.state = [];
+        this.strategy = strategy;
+    }
+    initState(array) {
+        this.state = array;
+    }
+    doLogic() {
+        const result = this.strategy.doAlgorithm(this.state);
+        return result.join(', ');
+    }
+    changeStrategy(strategy) {
+        this.strategy = strategy;
     }
 }
-var ScreenState;
-(function (ScreenState) {
-    ScreenState["READY"] = "onReady";
-    ScreenState["LOCKED"] = "onLocked";
-    ScreenState["BUSY"] = "onApp";
-})(ScreenState || (ScreenState = {}));
-class SmartPhone {
-    constructor() {
-        console.log(' ..... New device has initiated 📲 ..... ');
-        this.state = new OnReadyState(this);
-    }
-    changeState(newState) {
-        this.state = newState;
-        console.log('');
-    }
-    blockDisplay() {
-        console.log('📴 Device screen blocked ');
-    }
-    unlockDisplay() {
-        console.log('📱 Device unlocked ✔️');
-    }
-    loadApp() {
-        console.log('--Clicked load app--');
-        this.state.loadApp();
-    }
-    volumeIncrease() {
-        console.log('volume more 🔊🔊');
-    }
-    volumeDecrease() {
-        console.log('volume less 🔉');
-    }
-    clickPower() {
-        console.log('--Clicked power Button--');
-        this.state.clickPower();
-    }
-    clickVolumeAdd() {
-        console.log('--Clicked Volume Add--');
-        this.state.clickVolumeAdd();
-    }
-    clickVolumeLow() {
-        console.log('--Clicked Volume Low--');
-        this.state.clickVolumeLow();
+class SortedDefault extends Strategy {
+    doAlgorithm(data) {
+        return [...data].sort((a, b) => {
+            if (typeof a === 'number' || typeof b === 'number') {
+                return Number(a) - Number(b);
+            }
+            if (typeof a === 'string' || typeof b === 'string') {
+                return a.localeCompare(b);
+            }
+            return a - b;
+        });
     }
 }
-class OnReadyState extends State {
-    constructor(dev) {
-        super(dev);
-        this.screenState = ScreenState.READY;
-        console.log(`Device is : ${this.screenState}`);
-    }
-    clickPower() {
-        this.device.changeState(new OnLockedState(this.device));
-    }
-    clickVolumeAdd() {
-        this.device.volumeIncrease();
-    }
-    clickVolumeLow() {
-        this.device.volumeDecrease();
-    }
-    loadApp() {
-        console.log('loading app 🔂');
-        this.device.changeState(new OnAppState(this.device));
+class Reversed extends Strategy {
+    doAlgorithm(data) {
+        return [...data].reverse();
     }
 }
-class OnLockedState extends State {
-    constructor(dev) {
-        super(dev);
-        this.screenState = ScreenState.LOCKED;
-        console.log(`Device is : ${this.screenState}`);
-    }
-    clickPower() {
-        this.device.changeState(new OnReadyState(this.device));
-    }
-    clickVolumeAdd() {
-        console.log('[Denied:] The device is locked 📵');
-    }
-    clickVolumeLow() {
-        console.log('[Denied:] The device is locked 📵');
-    }
-    loadApp() {
-        console.log('[Denied:] The device is locked 📵');
-    }
-}
-class OnAppState extends State {
-    constructor(dev) {
-        super(dev);
-        this.screenState = ScreenState.BUSY;
-        console.log(`Device is : ${this.screenState}`);
-    }
-    clickPower() {
-        this.device.changeState(new OnLockedState(this.device));
-    }
-    clickVolumeAdd() {
-        this.device.volumeIncrease();
-    }
-    clickVolumeLow() {
-        this.device.volumeDecrease();
-    }
-    loadApp() {
-        console.log('loading app 🔂');
-        this.device.changeState(new OnAppState(this.device));
-    }
-}
-const myDevice = new SmartPhone();
-console.log('');
-myDevice.clickPower();
-console.log('');
-myDevice.clickVolumeAdd();
-console.log('');
-myDevice.loadApp();
-console.log('');
-myDevice.clickPower();
-console.log('');
-myDevice.clickVolumeLow();
-myDevice.clickVolumeLow();
-console.log('');
-myDevice.clickVolumeAdd();
-console.log('');
-myDevice.loadApp();
+const dataString = ['r', 'w', 'e', 'n', 'a', 'b', 'g'];
+const dataNumbs = [7, 5, 3, 9, 12, 0, 4, 1];
+const context = new Context(new SortedDefault());
+context.initState(dataString);
+console.log(context.doLogic());
+context.changeStrategy(new Reversed());
+console.log(context.doLogic());
+console.log('--------------');
+context.initState(dataNumbs);
+console.log(context.doLogic());
+context.changeStrategy(new SortedDefault());
+console.log(context.doLogic());
