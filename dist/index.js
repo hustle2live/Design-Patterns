@@ -1,70 +1,97 @@
-var Walls;
-(function (Walls) {
-    Walls["north"] = "north";
-    Walls["south"] = "south";
-    Walls["west"] = "west";
-    Walls["east"] = "east";
-    Walls["floor"] = "floor";
-    Walls["ceil"] = "ceil";
-})(Walls || (Walls = {}));
 class Room {
+}
+class House {
     constructor() {
-        this.roomColors = {
-            [Walls.north]: '',
-            [Walls.south]: '',
-            [Walls.west]: '',
-            [Walls.east]: '',
-            [Walls.floor]: '',
-            [Walls.ceil]: ''
-        };
+        this.rooms = [];
     }
-    paint(direction, color = 'white') {
-        this.roomColors[direction] = color;
+    add(el) {
+        this.rooms.push(el);
+    }
+    accept(visitor) {
+        console.log('Start house cleaning 🏠 ');
+        for (const element of this.rooms) {
+            element.accept(visitor);
+        }
     }
 }
-class DecorateRoom {
-    constructor() {
-        this.room = new Room();
-    }
-}
-class LightBeigeRoom extends DecorateRoom {
+class Garage extends Room {
     constructor() {
         super(...arguments);
-        this.name = 'Beige masters Bedroom';
+        this.doorsOpened = true;
+        this.name = 'garage';
     }
-    decorate() {
-        const beige = 'beige';
-        this.room.paint(Walls.east, beige);
-        this.room.paint(Walls.west, beige);
-        this.room.paint(Walls.north, beige);
-        this.room.paint(Walls.south, beige);
-        this.room.paint(Walls.ceil, beige);
-        this.room.paint(Walls.floor, 'light-brown');
-        console.log(this.name + ' - painting 🖌🎨:');
-        console.log(this.room.roomColors);
+    accept(visitor) {
+        visitor.totakeOutTheTrash(this);
+    }
+    openCloseDoors() {
+        if (this.doorsOpened) {
+            console.log('Do not forget to close doors!🚪');
+        }
+    }
+    bringOutTrash() {
+        this.openCloseDoors();
+        console.log('The Garbage is taken out out ');
+    }
+}
+class Kitchen extends Room {
+    constructor() {
+        super(...arguments);
+        this.name = 'kitchen';
+        this.dishLiquid = false;
+    }
+    accept(visitor) {
+        visitor.toWashTheDishes(this);
+    }
+    setDishLiquid(mark) {
+        this.dishLiquid = mark;
+    }
+    showError() {
+        console.log('We have out of wash liquid 🚱💧. Need to add some.');
+    }
+    wash() {
+        if (!this.dishLiquid) {
+            this.showError();
+        }
+    }
+}
+class Hallway extends Room {
+    constructor() {
+        super(...arguments);
+        this.name = 'hall';
+    }
+    accept(visitor) {
+        visitor.toCleanTheFloor(this);
+    }
+    avoidShoes() {
+        console.log('Take off shoes 👞👠');
+    }
+    washFloor() {
+        console.log('🧹mobstick or swob is picked up');
+    }
+}
+class ServiceCleaner {
+}
+class HouseCleaner extends ServiceCleaner {
+    toCleanTheFloor(room) {
+        console.log(`Started to clean: ${room.name}`);
+        room.avoidShoes();
+        room.washFloor();
+        console.log('');
+    }
+    toWashTheDishes(room) {
+        console.log(`Started to clean: ${room.name}`);
+        room.wash();
+        console.log('');
+    }
+    totakeOutTheTrash(room) {
+        console.log(`Started to clean: ${room.name}`);
+        room.openCloseDoors();
         console.log('');
     }
 }
-class TwoColoredRoom extends DecorateRoom {
-    constructor(colorA, colorB) {
-        super();
-        this.name = 'Large Playing room';
-        this.colorA = colorA;
-        this.colorB = colorB;
-    }
-    decorate() {
-        this.room.paint(Walls.east, this.colorA);
-        this.room.paint(Walls.west, this.colorA);
-        this.room.paint(Walls.north, this.colorB);
-        this.room.paint(Walls.south, this.colorB);
-        this.room.paint(Walls.ceil, 'white');
-        this.room.paint(Walls.floor, 'abstract dark-blue');
-        console.log(this.name + ' - painting 🖌🎨:');
-        console.log(this.room.roomColors);
-        console.log('');
-    }
-}
-const room1 = new LightBeigeRoom();
-room1.decorate();
-const room2 = new TwoColoredRoom('light-sky-blue', 'violet');
-room2.decorate();
+const house = new House();
+house.add(new Garage());
+house.add(new Kitchen());
+house.add(new Hallway());
+const cleaner = new HouseCleaner();
+house.accept(cleaner);
